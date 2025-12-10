@@ -1,16 +1,17 @@
-from openai import OpenAI
 import os
+from dotenv import load_dotenv
+from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+load_dotenv()
 
-def call_llm(prompt: str, model="gpt-4.1", temperature: float = 0.2):
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+MODEL = os.getenv("LLM_MODEL", "gpt-4.1")
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+def ask_llm(prompt: str):
     response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": "You are a real estate assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=temperature
+        model=MODEL,
+        messages=[{"role": "user", "content": prompt}]
     )
-
     return response.choices[0].message.content
