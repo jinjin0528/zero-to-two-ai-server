@@ -1,9 +1,9 @@
-from app.llm.clients.openai_client import llm_client
-from app.llm.prompts.agent2_prompt import (
+from infrastructure.llm.client import client
+from infrastructure.llm.prompts.agent2.agent2_prompt import (
     TENANT_RECOMMEND_REASON_SYSTEM,
     TENANT_RECOMMEND_REASON_USER_TEMPLATE,
 )
-from app.llm.schemas.agent2_schema import (
+from infrastructure.llm.schemas.agent2_schema import (
     TenantRecommendReasonInput,
     TenantRecommendReasonOutput,
 )

@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 
-from app.llm.schemas.agent1_schema import (
+from infrastructure.llm.schemas.agent1_schema import (
     PropertyDescriptionInput,
     PropertyDescriptionOutput,
     TenantRequirementInput,
     TenantRequirementOutput,
 )
-from app.llm.services.agent1_service import (
+from infrastructure.llm.services.agent1_service import (
     clean_tenant_requirement,
     generate_property_description,
 )
