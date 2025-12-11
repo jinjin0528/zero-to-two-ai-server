@@ -29,7 +29,7 @@ class CreateTenantRequestService(CreateTenantRequestPort):
         self.embedding_writer = embedding_writer
         self.embedder = embedder
 
-    def execute(self, cmd: CreateTenantRequestCommand) -> CreateTenantRequestResult:
+    async def execute(self, cmd: CreateTenantRequestCommand) -> CreateTenantRequestResult:
         created = self.writer.create_request(cmd)
         print(f"[tenant_request] created id={created.tenant_request_id}")
 
@@ -45,7 +45,7 @@ class CreateTenantRequestService(CreateTenantRequestPort):
         embed_requests = [
             EmbedRequest(record_id=created.tenant_request_id, text=summary_text)
         ]
-        embed_results = self.embedder.embed(embed_requests)
+        embed_results = await self.embedder.embed(embed_requests)
         print(f"[tenant_request] embeddings created: {len(embed_results)}")
         to_save = [(res.record_id, res.vector) for res in embed_results]
         self.embedding_writer.upsert_embeddings(to_save)

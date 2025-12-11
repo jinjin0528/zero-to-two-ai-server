@@ -27,30 +27,31 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def main():
+async def main():
     repo = TenantRequestRepository()
     embedder = OpenAIEmbeddingAgent()
     usecase = CreateTenantRequestService(repo, repo, embedder)
 
     cmd = CreateTenantRequestCommand(
         user_id=1,
-        budget=10000,
-        preferred_area="서울시 영등포구",
-        family="3인 가족",
-        age_range="30대",
-        job="회사원",
-        commute_location="여의도",
+        budget=20000,
+        preferred_area="서울시 마포구",
+        family="4인 가족",
+        age_range="50대",
+        job="변호사",
+        commute_location="역삼",
         car_parking=True,
-        pet=False,
+        pet=True,
         school_district=True,
         lifestyle="조용하고 산책을 즐깁니다.",
         expire_dt=None,
     )
-    result = usecase.execute(cmd)
+    result = await usecase.execute(cmd)
     logger.info("tenant_request_id=%s embedded=%s", result.tenant_request_id, result.embedded)
     if embedder.is_dummy():
         logger.warning("임베딩이 더미 모드로 실행되었습니다 (OPENAI_API_KEY 미설정).")
 
 
 if __name__ == "__main__":
-    main()
+    import asyncio
+    asyncio.run(main())

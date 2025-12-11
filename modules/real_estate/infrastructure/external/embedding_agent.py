@@ -22,11 +22,12 @@ class OpenAIEmbeddingAgent(EmbeddingPort):
     def is_dummy(self) -> bool:
         return self.use_dummy
 
-    def embed(self, requests: Sequence[EmbedRequest]) -> Sequence[EmbedResult]:
+    async def embed(self, requests: Sequence[EmbedRequest]) -> Sequence[EmbedResult]:
         if self.use_dummy:
             return [self._dummy_embed(req) for req in requests]
         texts = [req.text for req in requests]
-        resp = requests_post(
+        resp = await _to_thread(
+            requests_post,
             self.endpoint,
             headers={
                 "Authorization": f"Bearer {self.api_key}",
@@ -53,3 +54,9 @@ class OpenAIEmbeddingAgent(EmbeddingPort):
 def requests_post(*args, **kwargs):
     """테스트 시 모킹을 쉽게 하기 위한 래퍼."""
     return requests.post(*args, **kwargs)
+
+
+async def _to_thread(fn, *args, **kwargs):
+    import asyncio
+
+    return await asyncio.to_thread(fn, *args, **kwargs)

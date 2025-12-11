@@ -10,7 +10,7 @@ class EmbeddingPort(ABC):
     """텍스트를 벡터로 변환."""
 
     @abstractmethod
-    def embed(self, requests: Sequence[EmbedRequest]) -> Sequence[EmbedResult]:
+    async def embed(self, requests: Sequence[EmbedRequest]) -> Sequence[EmbedResult]:
         raise NotImplementedError
 
     @abstractmethod

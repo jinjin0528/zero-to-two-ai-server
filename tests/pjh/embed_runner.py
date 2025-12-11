@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def main():
+async def main():
     reader_writer = RealEstateEmbeddingRepository()
     summarizer = RuleBasedSummarizer()
     embedder = OpenAIEmbeddingAgent()
@@ -35,11 +35,13 @@ def main():
         reader_writer, reader_writer, summarizer, embedder
     )
     logger.info("임베딩 파이프라인 시작 (더미=%s)", embedder.is_dummy())
-    result = usecase.execute()
+    result = await usecase.execute()
     logger.info("임베딩 완료: %s", result)
     if embedder.is_dummy():
         logger.warning("임베딩이 더미 모드로 실행되었습니다 (OPENAI_API_KEY 미설정).")
 
 
 if __name__ == "__main__":
-    main()
+    import asyncio
+
+    asyncio.run(main())

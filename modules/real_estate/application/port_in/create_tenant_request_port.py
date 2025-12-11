@@ -10,5 +10,5 @@ from modules.real_estate.application.dto.tenant_request_dto import (
 
 class CreateTenantRequestPort(ABC):
     @abstractmethod
-    def execute(self, cmd: CreateTenantRequestCommand) -> CreateTenantRequestResult:
+    async def execute(self, cmd: CreateTenantRequestCommand) -> CreateTenantRequestResult:
         raise NotImplementedError

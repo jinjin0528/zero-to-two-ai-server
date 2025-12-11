@@ -31,7 +31,7 @@ class SummarizeAndEmbedAllRealEstateService:
         self.summarizer = summarizer
         self.embedder = embedder
 
-    def execute(self) -> dict:
+    async def execute(self) -> dict:
         records = self.reader.fetch_all_records()
         print(f"[embed] records fetched: {len(records)}")
         summaries: list[SummarizeResult] = list(self.summarizer.summarize(records))
@@ -44,7 +44,9 @@ class SummarizeAndEmbedAllRealEstateService:
             embed_results = []
             saved = 0
         else:
-            embed_results: list[EmbedResult] = list(self.embedder.embed(embed_requests))
+            embed_results: list[EmbedResult] = list(
+                await self.embedder.embed(embed_requests)
+            )
             print(f"[embed] embeddings created: {len(embed_results)}")
             to_save = [(res.record_id, res.vector) for res in embed_results]
             saved = self.writer.upsert_embeddings(to_save)
