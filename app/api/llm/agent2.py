@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from app.llm.schemas.agent2_schema import (
+from infrastructure.llm.schemas.agent2_schema import (
     TenantRecommendReasonInput,
     TenantRecommendReasonOutput,
 )
-from app.llm.services.agent2_service import generate_tenant_recommend_reason
+from infrastructure.llm.services.agent2_service import generate_tenant_recommend_reason
 
 router = APIRouter(prefix="/agent2", tags=["agent2"])
 

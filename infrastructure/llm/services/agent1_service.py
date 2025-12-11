@@ -1,11 +1,11 @@
-from app.llm.clients.openai_client import llm_client
-from app.llm.prompts.agent1_prompt import (
+from infrastructure.llm.client import client
+from infrastructure.llm.prompts.agent1.agent1_prompt import (
     PROPERTY_DESCRIPTION_SYSTEM,
     PROPERTY_DESCRIPTION_USER_TEMPLATE,
     TENANT_REQUIREMENT_SYSTEM,
     TENANT_REQUIREMENT_USER_TEMPLATE,
 )
-from app.llm.schemas.agent1_schema import (
+from infrastructure.llm.schemas.agent1_schema import (
     PropertyDescriptionInput,
     PropertyDescriptionOutput,
     TenantRequirementInput,
