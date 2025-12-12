@@ -19,3 +19,16 @@ class RecommendedListing:
 @dataclass
 class RecommendResult:
     listings: List[RecommendedListing]
+
+
+@dataclass
+class RecommendedListingDetail:
+    real_estate_list_id: int
+    score: float
+    title: str | None
+    address: str | None
+    deal_type: str | None
+    deposit: int | None
+    rent_fee: int | None
+    area: float | None
+    residence_type: str | None

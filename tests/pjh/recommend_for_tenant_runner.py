@@ -22,6 +22,9 @@ from modules.real_estate.infrastructure.repository.real_estate_embedding_search_
 from modules.real_estate.infrastructure.repository.tenant_request_embedding_reader import (
     TenantRequestEmbeddingReader,
 )
+from modules.real_estate.infrastructure.repository.real_estate_repository import (
+    RealEstateRepository,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -30,16 +33,27 @@ logger = logging.getLogger(__name__)
 async def main():
     tenant_reader = TenantRequestEmbeddingReader()
     re_search = RealEstateEmbeddingSearchRepository()
-    usecase = RecommendRealEstateForTenantService(tenant_reader, re_search)
+    re_reader = RealEstateRepository()
+    usecase = RecommendRealEstateForTenantService(tenant_reader, re_search, re_reader)
 
     query = RecommendListingsQuery(tenant_request_id=2, top_n=10)
     result = await usecase.execute(query)
     for idx, rec in enumerate(result.listings, start=1):
-        logger.info("[%s] real_estate_list_id=%s score=%s", idx, rec.real_estate_list_id, rec.score)
+        logger.info(
+            "[%s] id=%s score=%.4f title=%s address=%s deal_type=%s deposit=%s rent=%s area=%s",
+            idx,
+            rec.real_estate_list_id,
+            rec.score,
+            rec.title,
+            rec.address,
+            rec.deal_type,
+            rec.deposit,
+            rec.rent_fee,
+            rec.area,
+        )
 
 
 if __name__ == "__main__":
     import asyncio
 
     asyncio.run(main())
-
