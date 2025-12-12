@@ -1,10 +1,16 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
+
 from infrastructure.llm.client import ask_llm
 
-router = APIRouter(prefix="/llm")
+class TenantSearchRequest(BaseModel):
+    message: str
 
-@router.post("/test")
-def test_llm(query: dict):
-    prompt = query.get("prompt")
-    result = ask_llm(prompt)
+
+router = APIRouter(prefix="/tenant")
+
+
+@router.post("/search")
+def search_by_message(request: TenantSearchRequest):
+    result = ask_llm(request.message)
     return {"response": result}
