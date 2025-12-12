@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import Sequence
 
-from modules.real_estate.application.dto.chatbot_search_dto import (
+from modules.real_estate.application.dto.chatbot_dto import (
     ChatbotSearchCommand,
     ChatbotSearchListing,
     ChatbotSearchResult,
