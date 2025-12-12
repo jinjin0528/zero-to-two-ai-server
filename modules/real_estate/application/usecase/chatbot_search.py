@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import Sequence
 
-from modules.real_estate.application.dto.chatbot_dto import (
+from modules.real_estate.application.dto.chatbot_search_dto import (
     ChatbotSearchCommand,
     ChatbotSearchListing,
     ChatbotSearchResult,
@@ -33,7 +33,7 @@ class ChatbotSearchService(ChatbotSearchPort):
 
     async def execute(self, cmd: ChatbotSearchCommand) -> ChatbotSearchResult:
         """메시지 → 임베딩 → 벡터 검색 → 매물 DTO 조립."""
-
+        self._ensure_valid_message(cmd.message)
         summary_text = self._build_summary(cmd.message)
 
         if self.embedder.is_dummy():
@@ -58,6 +58,15 @@ class ChatbotSearchService(ChatbotSearchPort):
         # 향후 LLM 파서가 추가되면 여기에서 구조화된 텍스트를 생성
         return cleaned
 
+    def _ensure_valid_message(self, message: str) -> None:
+        """비어 있거나 과도하게 긴 입력을 막아 검색 리소스를 보호합니다."""
+
+        if not message or not message.strip():
+            raise ValueError("메시지가 비어 있습니다. 검색 조건을 입력하세요.")
+
+        if len(message) > 2000:
+            raise ValueError("메시지가 너무 깁니다. 2000자 이하로 요약해 주세요.")
+
     def _hydrate_listings(self, hits: Sequence[VectorSearchHit]) -> list[ChatbotSearchListing]:
         if not hits:
             return []
@@ -71,15 +80,13 @@ class ChatbotSearchService(ChatbotSearchPort):
             enriched.append(
                 ChatbotSearchListing(
                     id=hit.real_estate_list_id,
-                    # TODO: 유사 매물 응답값 상세 수정 필요
+                    score=hit.score,
                     title=getattr(estate, "title", None),
                     address=getattr(estate, "address", None),
-                    deal=getattr(estate, "deal", None),
+                    deal_type=getattr(estate, "deal_type", None),
                     deposit=getattr(estate, "deposit", None),
-                    cost=getattr(estate, "cost", None),
-                    area=getattr(estate, "area", None),
-                    room=getattr(estate, "room", None),
-                    bath=getattr(estate, "bath", None),
+                    rent=getattr(estate, "rent", None),
+                    area=getattr(estate, "area", None)
                 )
             )
         return enriched

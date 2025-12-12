@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from infrastructure.llm.client import ask_llm
+
 class TenantSearchRequest(BaseModel):
     message: str
 
